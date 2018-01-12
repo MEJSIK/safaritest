@@ -24,6 +24,7 @@ var DiffCamEngine = (function () {
     var scoreThreshold; // min for an image to be considered significant
     var includeMotionBox; // flag to calculate and draw motion bounding box
     var includeMotionPixels; // flag to create object denoting pixels with motion
+
     var errorElement = document.querySelector('#errorMsg');
 
     function init(options) {
@@ -37,9 +38,9 @@ var DiffCamEngine = (function () {
         motionCanvas = options.motionCanvas || document.createElement('canvas');
         captureIntervalTime = options.captureIntervalTime || 100;
         captureWidth = options.captureWidth || 640;
-        captureHeight = options.captureHeight || 640;
-        diffWidth = options.diffWidth || 128;
-        diffHeight = options.diffHeight || 64;
+        captureHeight = options.captureHeight || 480;
+        diffWidth = options.diffWidth || 32;
+        diffHeight = options.diffHeight || 16;
         pixelDiffThreshold = options.pixelDiffThreshold || 32;
         scoreThreshold = options.scoreThreshold || 16;
         includeMotionBox = options.includeMotionBox || false;
@@ -86,66 +87,9 @@ var DiffCamEngine = (function () {
             }
         };
 
-        function handleSuccess(stream) {
-            var videoTracks = stream.getVideoTracks();
-            console.log('Got stream with constraints:', constraints);
-            console.log('Using video device: ' + videoTracks[0].label);
-            stream.oninactive = function () {
-                console.log('Stream inactive');
-            };
-            window.stream = stream; // make variable available to browser console
-            video.srcObject = stream;
-        }
-
-        function handleError(error) {
-            if (error.name === 'ConstraintNotSatisfiedError') {
-                errorMsg('The resolution ' + constraints.video.width.exact + 'x' +
-                    constraints.video.width.exact + ' px is not supported by your device.');
-            } else if (error.name === 'PermissionDeniedError') {
-                errorMsg('Permissions have not been granted to use your camera and ' +
-                    'microphone, you need to allow the page access to your devices in ' +
-                    'order for the demo to work.');
-            }
-            errorMsg('getUserMedia error: ' + error.name, error);
-        }
-
-        function errorMsg(msg, error) {
-            errorElement.innerHTML += '<p>' + msg + '</p>';
-            if (typeof error !== 'undefined') {
-                console.error(error);
-            }
-        }
-
-        /* Get browser */
-        $j.browser.chrome = /chrome/.test(navigator.userAgent.toLowerCase());
-
-        /* Detect Chrome */
-        if ($j.browser.chrome) {
-            /* Do something for Chrome at this point */
-            navigator.mediaDevices.getUserMedia(constraints)
-                .then(initSuccess)
-                .catch(initError);
-            alert("You are using Chrome!");
-
-            /* Finally, if it is Chrome then jQuery thinks it's 
-               Safari so we have to tell it isn't */
-            $j.browser.safari = false;
-        }
-
-        /* Detect Safari */
-        if ($j.browser.safari) {
-            /* Do something for Safari */
-            navigator.mediaDevices.getUserMedia(constraints)
-                .then(handleSuccess).catch(handleError);
-            alert("You are using Safari!");
-        }
-
-
-
-
-
-
-
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then(initSuccess)
+            .catch(initError);
     }
 
     function initSuccess(requestedStream) {
@@ -154,9 +98,24 @@ var DiffCamEngine = (function () {
     }
 
     function initError(error) {
-        console.log(error);
-        initErrorCallback();
+        if (error.name === 'ConstraintNotSatisfiedError') {
+            errorMsg('The resolution ' + constraints.video.width.exact + 'x' +
+                constraints.video.width.exact + ' px is not supported by your device.');
+        } else if (error.name === 'PermissionDeniedError') {
+            errorMsg('Permissions have not been granted to use your camera and ' +
+                'microphone, you need to allow the page access to your devices in ' +
+                'order for the demo to work.');
+        }
+        errorMsg('getUserMedia error: ' + error.name, error);
     }
+
+    function errorMsg(msg, error) {
+        errorElement.innerHTML += '<p>' + msg + '</p>';
+        if (typeof error !== 'undefined') {
+            console.error(error);
+        }
+    }
+
 
     function start() {
         if (!stream) {

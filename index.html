@@ -1,38 +1,62 @@
 <!DOCTYPE html>
-<!-- * Copyright (c) 2015 The WebRTC project authors. All Rights Reserved. * * Use of this source code is governed by a BSD-style license * that can be found in the LICENSE file in the root of the source * tree. -->
 <html>
 
 <head>
     <meta charset="utf-8">
-    <meta name="description" content="WebRTC code samples">
-    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
-    <meta itemprop="description" content="Client-side WebRTC code samples">
-    <meta itemprop="image" content="../../../images/webrtc-icon-192x192.png">
-    <meta itemprop="name" content="WebRTC code samples">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta id="theme-color" name="theme-color" content="#ffffff">
-    <base target="_blank">
-    <title>getUserMedia</title>
-    <link rel="icon" sizes="192x192" href="../../../images/webrtc-icon-192x192.png">
-    <link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="../../../css/main.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Safari Test Cam</title>
+
     <style>
-        #gum-local {
-            width: 100%;
+        body {
+            margin: 20px;
+            font: 1.5em/1.2 sans-serif;
+            text-align: center;
         }
+        
+        figure {
+            display: inline-block;
+            margin: 10px;
+            vertical-align: top;
+        }
+        
+        figcaption {
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        video,
+        canvas {
+            width: 480px;
+            height: 360px;
+            background-color: #999;
+        }
+        
+        canvas {
+            image-rendering: pixelated;
+        }
+
     </style>
 </head>
 
 <body>
-    <div id="container">
-        <video id="cam-stream__video" autoplay playsinline></video>
-        <div id="errorMsg"></div>
-    </div>
-    <script type="text/javascript" language="JavaScript">
-        <!-- start hide document.writeln("<p style=\"font-size: x-small\">Używasz przeglądarki " + navigator.appName + " (" + navigator.appCodeName + ") " + navigator.appVersion + "</p>"); // end hide -->
-    </script>
-    <script src="js/main.js"></script>
-     <script src="js/diff-cam-engine.js"></script>
+    <figure>
+        <video id="cam-stream__video"></video>
+        <figcaption>Live Video</figcaption>
+    </figure>
+
+    <figure>
+        <canvas id="motion"></canvas>
+        <figcaption>
+            Motion Heatmap
+            <br> Score: <span id="score">?</span>
+            <span id="errorMsg"></span>
+        </figcaption>
+    </figure>
+
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="diff-cam-engine.js"></script>
+    <script src="site.js"></script>
 </body>
 
 </html>
