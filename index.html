@@ -12,49 +12,26 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta id="theme-color" name="theme-color" content="#ffffff">
     <base target="_blank">
-    <title>Safari getUserMedia</title>
+    <title>getUserMedia</title>
     <link rel="icon" sizes="192x192" href="../../../images/webrtc-icon-192x192.png">
     <link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="../../../css/main.css">
-    <link rel="stylesheet" href="./css/flexboxgrid.min.css">
     <style>
-        .cam-stream {
-            width: 200px;
-            height: 200px;
-        }
-        
         #gum-local {
-            width: 200px;
-            height: 200px;
-            border: 5px solid #00216c;
-            box-shadow: 0px 0px 20px 2px rgba(0, 0, 0, 0.65);
-            border-radius: 50%;
+            width: 100%;
         }
-
     </style>
 </head>
 
 <body>
     <div id="container">
-       
-
-
-        </div>
-        <div class="cam-stream">
-            <figure>
-                <video id="cam-stream__video" autoplay playsinline></video>
-                <canvas id="motion"></canvas>
-                <div id="errorMsg"></div>
-            </figure>
-
-        </div>
+        <video id="gum-local" autoplay playsinline></video>
+        <div id="errorMsg"></div>
     </div>
     <script type="text/javascript" language="JavaScript">
         <!-- start hide document.writeln("<p style=\"font-size: x-small\">Używasz przeglądarki " + navigator.appName + " (" + navigator.appCodeName + ") " + navigator.appVersion + "</p>"); // end hide -->
-
     </script>
     <script src="js/main.js"></script>
-    
 </body>
 
 </html>
