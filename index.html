@@ -1,17 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="pl">
 
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" type="image/x-icon" href="https://production-assets.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" />
+    <link rel="mask-icon" type="" href="https://production-assets.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" />
+    <meta name="robots" content="noindex">
+    <title>CodePen - Hello, WebRTC on Safari 11</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Safari Test Cam</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="diff-cam.js"></script>
 
     <style>
+        html,
         body {
-            margin: 20px;
-            font: 1.5em/1.2 sans-serif;
-            text-align: center;
+            height: 100%;
+            overflow: hidden;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #cam-stream__video {
+            width: 50%;
         }
         
         figure {
@@ -25,38 +39,103 @@
             font-weight: bold;
         }
         
-        video,
-        canvas {
+        cam-stream__video,
+        cam-stream__motion {
             width: 480px;
             height: 360px;
             background-color: #999;
         }
         
-        canvas {
+        #cam-stream__motion {
             image-rendering: pixelated;
         }
-
     </style>
 </head>
 
 <body>
-    <figure>
-        <video id="cam-stream__video"></video>
+
+    <figure id="live">
+
         <figcaption>Live Video</figcaption>
     </figure>
 
     <figure>
-        <canvas id="motion"></canvas>
+        <canvas id="cam-stream__motion"></canvas>
         <figcaption>
             Motion Heatmap
             <br> Score: <span id="score">?</span>
-            <span id="errorMsg"></span>
+            <p id="erro"></p>
         </figcaption>
     </figure>
 
-    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-    <script src="diff-cam-engine.js"></script>
-    <script src="site.js"></script>
+    <script>
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+        var video = document.createElement('video');
+        video.style.width = document.width + 'px';
+        video.style.height = document.height + 'px';
+        video.setAttribute('autoplay', '');
+        video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
+        video.setAttribute('id', 'cam-stream__video')
+        var facingMode = "user";
+        var errorElement = document.getElementById("erro");
+        var errorElement = document.getElementById("erro");
+        var constraints = {
+            audio: false,
+            video: true
+        }
+        function success(stream) {
+            var videoTracks = stream.getVideoTracks();
+            console.log('Got stream with constraints:', constraints);
+            console.log('Using video device: ' + videoTracks[0].label);
+            stream.oninactive = function() {
+                console.log('Stream inactive');
+            };
+            window.stream = stream; // make variable available to browser console
+            video.srcObject = stream;
+        }
+        function errorMsg(msg, error) {
+            errorElement.innerHTML += '<p>' + msg + '</p>';
+            if (typeof error !== 'undefined') {
+                console.error(error);
+            }
+        }
+        function initError(error) {
+            if (error.name === 'ConstraintNotSatisfiedError') {
+                errorMsg('The resolution ' + constraints.video.width.exact + 'x' +
+                    constraints.video.width.exact + ' px is not supported by your device.');
+            } else if (error.name === 'PermissionDeniedError') {
+                errorMsg('Permissions have not been granted to use your camera and ' +
+                    'microphone, you need to allow the page access to your devices in ' +
+                    'order for the demo to work.');
+            }
+            errorMsg('getUserMedia error: ' + error.name, error);
+        }
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then(success)
+            .catch(initError);
+        document.getElementById("live").appendChild(video);
+        var myStream = document.getElementById("cam-stream__video");
+        var myMotion = document.getElementById("cam-stream__motion");
+        var score = document.getElementById('score');
+        function initSuccess() {
+            DiffCamEngine.start();
+        }
+        function initError() {
+            alert('Something went wrong.');
+        }
+        function capture(payload) {
+            console.log(score.textContent = payload.score);
+        }
+        DiffCamEngine.init({
+            video: myStream,
+            motionCanvas: myMotion,
+            initSuccessCallback: initSuccess,
+            initErrorCallback: initError,
+            captureCallback: capture
+        });
+    </script>
+
 </body>
 
 </html>
