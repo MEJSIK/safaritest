@@ -1,5 +1,11 @@
 # Safari getUserMedia Test
 
+<h2>v1.2</h2>
+<ul>
+  <li>Camera działa na iPhone z Safari 11+.</li>
+  <li>Skrypt do detekcji ruchu zaimplementowany, jednak mogą zdarzyć się problemy (Wciąz w fazie testów)</li>
+</ul>    
 
 
-<strong>Helping:</strong> https://medium.com/@leemartin/hello-webrtc-on-safari-11-e8bcb5335295
+
+<strong>Pomocne:</strong> https://medium.com/@leemartin/hello-webrtc-on-safari-11-e8bcb5335295
