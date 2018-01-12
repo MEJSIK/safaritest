@@ -1,5 +1,7 @@
-# Safari getUserMedia Test
+# Safari 11 getUserMedia Test
 
+
+<strong>DEMO:</strong> https://mejsik.github.io/safaritest
 <h2>v1.2</h2>
 <ul>
   <li>Camera działa na iPhone z Safari 11+.</li>
