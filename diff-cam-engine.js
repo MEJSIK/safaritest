@@ -93,8 +93,14 @@ var DiffCamEngine = (function () {
     }
 
     function initSuccess(requestedStream) {
-        stream = requestedStream;
-        initSuccessCallback();
+        var videoTracks = stream.getVideoTracks();
+        console.log('Got stream with constraints:', constraints);
+        console.log('Using video device: ' + videoTracks[0].label);
+        stream.oninactive = function () {
+            console.log('Stream inactive');
+        };
+        window.stream = stream; // make variable available to browser console
+        video.srcObject = stream;
     }
 
     function initError(error) {
