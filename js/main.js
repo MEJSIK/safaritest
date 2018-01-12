@@ -9,15 +9,12 @@
 'use strict';
 
 var errorElement = document.querySelector('#errorMsg');
-var video = document.querySelector('#cam-stream__video');
+var video = document.querySelector('video');
 
 // Put variables in global scope to make them available to the browser console.
 var constraints = window.constraints = {
     audio: false,
-    video: {
-        width: 200,
-        height: 200
-    }
+    video: true
 };
 
 function handleSuccess(stream) {
