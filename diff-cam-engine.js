@@ -1,3 +1,6 @@
+'use strict';
+
+
 var DiffCamEngine = (function () {
     var stream; // stream obtained from webcam
     var video; // shows stream
@@ -81,10 +84,7 @@ var DiffCamEngine = (function () {
     function requestWebcam() {
         var constraints = {
             audio: false,
-            video: {
-                width: captureWidth,
-                height: captureHeight
-            }
+            video: true
         };
 
         navigator.mediaDevices.getUserMedia(constraints)
@@ -93,10 +93,10 @@ var DiffCamEngine = (function () {
     }
 
     function initSuccess(requestedStream) {
-        var videoTracks = stream.getVideoTracks();
+        var videoTracks = requestedStream.getVideoTracks();
         console.log('Got stream with constraints:', constraints);
         console.log('Using video device: ' + videoTracks[0].label);
-        stream.oninactive = function () {
+        requestedStream.oninactive = function () {
             console.log('Stream inactive');
         };
         window.stream = stream; // make variable available to browser console
